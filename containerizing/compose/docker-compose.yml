@@ -1,0 +1,41 @@
+version: "3"
+# list all the images that we want to run
+services:
+
+  # name of the container
+  # important: the names of the containers and the ports need to be the same as the ones in the application.properties file
+  vpronginx:
+    image: hsinyih/vprofile-nginx:V1
+    ports:
+      - "80:80"
+
+  vproapp:
+    image: hsinyih/vprofile-tomcat:V1
+    ports:
+        - "8080:8080"
+
+  vprocache01:
+    image: memcached
+    ports:
+      - "11211:11211"
+  
+  vpromq01:
+    image: rabbitmq
+    ports:
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+
+  vprodb:
+    image: hsinyih/vprofile-mysql:V1
+    ports:
+      - "3306:3306"
+    volumes:
+      - vprodbdata:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=vprodbpass
+
+# create a docker volume for mysql
+volumes:
+  vprodbdata: {}
